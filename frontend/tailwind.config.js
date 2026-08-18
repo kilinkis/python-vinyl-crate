@@ -7,6 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
+        cream: {
+          DEFAULT: '#f7f4ec',
+          50: '#faf8f4',
+          100: '#f7f4ec',
+          200: '#ede6d5',
+          300: '#e0d4b8',
+          400: '#cfbc94',
+          500: '#be9f6e',
+        },
+        brass: {
+          DEFAULT: '#d4af37',
+          light: '#e6c86e',
+          dark: '#9a7b1c',
+        },
+        wood: {
+          DEFAULT: '#2a1a12',
+          light: '#3d261b',
+          dark: '#170e0a',
+          edge: '#5c3a29',
+        },
         vinyl: {
           dark: '#0d0f12',
           surface: '#15181e',
