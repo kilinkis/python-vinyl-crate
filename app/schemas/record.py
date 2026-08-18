@@ -6,10 +6,6 @@ from pydantic import BaseModel, ConfigDict, Field
 class RecordBase(BaseModel):
     """
     Base Schema with shared fields and validation rules.
-
-    Analogies:
-    - Node.js / TypeScript / Zod: Similar to a Zod schema (`z.object({...})`) or TS interface.
-    - PHP / Laravel: Similar to FormRequest validation rules (`$request->validate([...])`).
     """
     title: str = Field(..., min_length=1, max_length=255, description="Title of the vinyl album")
     artist: str = Field(..., min_length=1, max_length=255, description="Artist or band name")
@@ -19,7 +15,7 @@ class RecordBase(BaseModel):
 
 
 class RecordCreate(RecordBase):
-    """Schema for creating a new record (all base fields required)."""
+    """Schema for creating a new record (user_id is automatically assigned from the JWT token)."""
     pass
 
 
@@ -35,10 +31,9 @@ class RecordUpdate(BaseModel):
 class RecordResponse(RecordBase):
     """
     Schema returned to API clients.
-    `from_attributes = True` (formerly `orm_mode = True` in Pydantic v1) allows
-    Pydantic to automatically serialize data from SQLAlchemy ORM model instances.
     """
     id: int
+    user_id: int
     created_at: datetime
     updated_at: datetime
 

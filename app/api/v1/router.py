@@ -1,10 +1,10 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import records
+from app.api.v1.endpoints import records, auth
 
 api_router = APIRouter()
 
-# Records route group: /api/v1/records
-api_router.include_router(records.router, prefix="/records", tags=["Records"])
+# Authentication routes: /api/v1/auth/register, /api/v1/auth/login, /api/v1/auth/me
+api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
-# Step 2 will add:
-# api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+# Records routes: /api/v1/records
+api_router.include_router(records.router, prefix="/records", tags=["Records"])
