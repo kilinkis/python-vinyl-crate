@@ -1,71 +1,90 @@
 # 🎵 Vinyl Crate — Full-Stack Audiophile Inventory
 
-A production-ready full-stack web application for cataloging, grading, and valuing vinyl record collections.
+A production-ready full-stack application for cataloging, grading, valuing, and browsing vinyl record collections with interactive 3D crate flipping.
 
 Built with **FastAPI**, **SQLAlchemy 2.0**, **PostgreSQL / SQLite**, **Pydantic v2**, **React 18**, **TypeScript**, and **TailwindCSS**.
 
 ---
 
-## 🌟 Architecture Overview
+## 🌟 Architecture & Key Features
 
-- **Backend**:
-  - FastAPI with asynchronous route handlers and dependency injection.
-  - SQLAlchemy 2.0 ORM with typed `Mapped[...]` columns.
-  - User authentication via salted **bcrypt** password hashing and stateless **JWT tokens**.
-  - Multi-tenant crate isolation: each collector manages their own private collection.
+- **Backend (FastAPI & SQLAlchemy 2.0)**:
+  - Enterprise modular structure (`core/`, `models/`, `schemas/`, `crud/`, `api/v1/`).
+  - Salted **bcrypt** password hashing and stateless **JWT authentication**.
+  - Multi-tenant crate isolation: each collector has an isolated, private archive.
   - Full CRUD operations with search, pagination, and sorting.
   - Interactive OpenAPI / Swagger UI at `/docs`.
 
-- **Frontend**:
-  - React 18 + Vite + TypeScript.
-  - TailwindCSS with custom vinyl disc groove textures and sliding disc animations.
-  - Real-time search, condition grading filters, and portfolio value analytics.
-  - Live album artwork preview and sample presets.
-  - `AuthContext` with automatic JWT Bearer token injection and persistence.
+- **Frontend (React 18, TypeScript & TailwindCSS)**:
+  - **3D Crate Digging View**: Tactile sleeve browsing with gesture drag, mouse-wheel, arrow keys, and spinning vinyl disc animations.
+  - **Grid Gallery View**: Responsive album sleeve grid with condition tags and quick actions.
+  - **Crate Analytics**: Live total value, disc count, and pressing era span.
+  - **AuthContext**: Persistent authentication state in `localStorage` with automatic Bearer token attachment.
+
+- **DevOps & Testing (Pytest & Docker)**:
+  - Comprehensive Pytest test suite with **96% code coverage** and isolated in-memory test database fixtures.
+  - Production-grade `Dockerfile` with non-root security and layer caching.
+  - `docker-compose.yml` for 1-command full-stack orchestration (**FastAPI + PostgreSQL 16 + React**).
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### 1. Backend Setup
+### Option A: 1-Command Launch with Docker Compose
 
 ```bash
-# 1. Create and activate Python virtual environment
+# Spin up PostgreSQL, FastAPI backend, and React frontend
+docker compose up --build
+```
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://localhost:8000](http://localhost:8000)
+- **API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+### Option B: Local Development
+
+#### 1. Backend (FastAPI):
+```bash
+# Create and activate Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# 2. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 3. Start FastAPI server
+# Start backend server
 uvicorn main:app --reload
 ```
-API runs at **`http://127.0.0.1:8000`** (Swagger docs at **`http://127.0.0.1:8000/docs`**).
 
----
-
-### 2. Frontend Setup
-
-In a second terminal window:
-
+#### 2. Frontend (React + Vite):
+In a second terminal:
 ```bash
-# 1. Navigate to frontend directory
 cd frontend
-
-# 2. Install dependencies
 npm install
-
-# 3. Start Vite development server
 npm run dev
 ```
-Frontend runs at **`http://localhost:5173`**.
 
 ---
 
-## 🧪 Demo Credentials
+## 🧪 Running the Pytest Test Suite
+
+Execute the automated test suite with coverage report:
+
+```bash
+# Run all tests
+pytest -v
+
+# Run tests with coverage report
+pytest --cov=app tests/
+```
+
+---
+
+## 🔑 Demo Credentials
 
 - **Username**: `vinyl_fan`
 - **Email**: `collector@crate.com`
 - **Password**: `secretpassword123`
 
-*(You can also use the one-click "Instant Demo Login" button directly in the UI modal)*.
+*(You can also use the one-click **"Click for Instant Demo Login"** button directly in the UI)*.
