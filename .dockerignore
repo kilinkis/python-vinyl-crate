@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Git
+.git/
+.gitignore
+
+# SQLite databases
+*.db
+*.sqlite3
+*.sqlite
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Frontend (handled in separate frontend build)
+frontend/node_modules/
+frontend/dist/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
