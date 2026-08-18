@@ -5,11 +5,14 @@ import {
   LogIn,
   RefreshCw,
   Sparkles,
+  LayoutGrid,
+  Layers,
 } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { StatsBanner } from './components/StatsBanner';
 import { RecordCard } from './components/RecordCard';
+import { RecordCrate } from './components/RecordCrate';
 import { RecordModal } from './components/RecordModal';
 import { AuthModal } from './components/AuthModal';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
@@ -31,6 +34,7 @@ export const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [conditionFilter, setConditionFilter] = useState('All');
   const [sortBy, setSortBy] = useState<'newest' | 'price_high' | 'price_low' | 'year' | 'title'>('newest');
+  const [viewMode, setViewMode] = useState<'crate' | 'grid'>('crate');
 
   // Modals
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
@@ -166,7 +170,7 @@ export const App: React.FC = () => {
             </h2>
 
             <p className="mt-4 text-base sm:text-lg text-zinc-400 max-w-xl">
-              Catalog your rare pressings, track collection valuation, and showcase your audiophile archive with high-res album artwork.
+              Catalog rare pressings, track portfolio valuation, and dig through your 3D record crate with album artwork.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -183,10 +187,10 @@ export const App: React.FC = () => {
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl text-left">
               <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 mb-3 border border-amber-500/20">
-                  <Sparkles className="h-5 w-5" />
+                  <Layers className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading font-bold text-white text-base">Audiophile Album Art</h3>
-                <p className="text-xs text-zinc-400 mt-1">High-resolution cover sleeves with interactive sliding vinyl discs.</p>
+                <h3 className="font-heading font-bold text-white text-base">3D Crate Digging</h3>
+                <p className="text-xs text-zinc-400 mt-1">Realistic tactile crate browsing with mouse wheel, gestures, and keyboard navigation.</p>
               </div>
 
               <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6">
@@ -199,7 +203,7 @@ export const App: React.FC = () => {
 
               <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 mb-3 border border-purple-500/20">
-                  <Disc3 className="h-5 w-5" />
+                  <Sparkles className="h-5 w-5" />
                 </div>
                 <h3 className="font-heading font-bold text-white text-base">Personal Isolation</h3>
                 <p className="text-xs text-zinc-400 mt-1">Multi-tenant JWT security keeps your collection private and isolated.</p>
@@ -212,27 +216,54 @@ export const App: React.FC = () => {
             {/* Stats Summary Banner */}
             <StatsBanner records={records} />
 
-            {/* Filter & Sort Controls */}
-            <div className="mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-4">
-              {/* Condition Filters */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mr-1 flex items-center gap-1.5">
-                  <SlidersHorizontal className="h-3.5 w-3.5 text-zinc-400" />
-                  Grade:
-                </span>
-                {['All', 'Mint', 'Near Mint', 'VG+', 'VG'].map((cond) => (
+            {/* Filter & View Switcher Bar */}
+            <div className="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-4">
+              {/* Left: View Mode Toggle & Condition Filters */}
+              <div className="flex flex-wrap items-center gap-3">
+                {/* View Mode Toggle: 3D Crate vs Grid */}
+                <div className="flex rounded-xl bg-zinc-950 p-1 border border-zinc-800">
                   <button
-                    key={cond}
-                    onClick={() => setConditionFilter(cond)}
-                    className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
-                      conditionFilter === cond
+                    onClick={() => setViewMode('crate')}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                      viewMode === 'crate'
                         ? 'bg-amber-500 text-zinc-950 shadow-md'
-                        : 'border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
-                    {cond}
+                    <Layers className="h-3.5 w-3.5" />
+                    <span>3D Crate</span>
                   </button>
-                ))}
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                      viewMode === 'grid'
+                        ? 'bg-amber-500 text-zinc-950 shadow-md'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <LayoutGrid className="h-3.5 w-3.5" />
+                    <span>Grid View</span>
+                  </button>
+                </div>
+
+                <div className="h-4 w-px bg-zinc-800 hidden sm:block" />
+
+                {/* Condition Filter Pills */}
+                <div className="flex items-center gap-1.5 overflow-x-auto">
+                  {['All', 'Mint', 'Near Mint', 'VG+', 'VG'].map((cond) => (
+                    <button
+                      key={cond}
+                      onClick={() => setConditionFilter(cond)}
+                      className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-colors ${
+                        conditionFilter === cond
+                          ? 'bg-zinc-200 text-zinc-950 shadow-sm'
+                          : 'border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      {cond}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Right: Sort Dropdown & Refresh */}
@@ -262,7 +293,7 @@ export const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Records Grid or Empty State */}
+            {/* Content Display: 3D Crate, Grid View, or Empty State */}
             {processedRecords.length === 0 ? (
               <EmptyState
                 isSearching={!!searchQuery || conditionFilter !== 'All'}
@@ -275,7 +306,18 @@ export const App: React.FC = () => {
                   setConditionFilter('All');
                 }}
               />
+            ) : viewMode === 'crate' ? (
+              /* 3D Crate Flipping Mode */
+              <RecordCrate
+                records={processedRecords}
+                onEdit={(r) => {
+                  setEditingRecord(r);
+                  setIsRecordModalOpen(true);
+                }}
+                onDelete={(r) => setRecordToDelete(r)}
+              />
             ) : (
+              /* Grid Gallery Mode */
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {processedRecords.map((record) => (
                   <RecordCard
