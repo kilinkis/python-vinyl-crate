@@ -21,6 +21,7 @@ class Record(Base):
     release_year: Mapped[int] = mapped_column(Integer, nullable=False)
     condition: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
+    cover_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"),
