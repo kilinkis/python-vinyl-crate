@@ -12,10 +12,11 @@ class RecordBase(BaseModel):
     release_year: int = Field(..., ge=1880, le=2100, description="Year of release (>= 1880)")
     condition: Optional[str] = Field(None, max_length=50, description="Condition (e.g., Mint, Near Mint, VG+, VG, Fair, Poor)")
     price: float = Field(..., ge=0.0, description="Price in USD (must be non-negative)")
+    cover_url: Optional[str] = Field(None, max_length=500, description="URL of the album artwork image")
 
 
 class RecordCreate(RecordBase):
-    """Schema for creating a new record (user_id is automatically assigned from the JWT token)."""
+    """Schema for creating a new record."""
     pass
 
 
@@ -26,6 +27,7 @@ class RecordUpdate(BaseModel):
     release_year: Optional[int] = Field(None, ge=1880, le=2100)
     condition: Optional[str] = Field(None, max_length=50)
     price: Optional[float] = Field(None, ge=0.0)
+    cover_url: Optional[str] = Field(None, max_length=500)
 
 
 class RecordResponse(RecordBase):
