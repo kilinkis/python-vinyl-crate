@@ -1,13 +1,18 @@
+import sys
+from pathlib import Path
+
+# Ensure project root is in sys.path when script is executed directly
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
 from app.db.base import Base
 from app.db.session import engine
-import app.models  # noqa: F401 (ensure models are loaded)
+import app.models  # noqa: F401
 
 
 def init_db() -> None:
-    """
-    Initializes database tables.
-    Equivalent to running `npx prisma db push` (Node.js) or `php artisan migrate` (Laravel).
-    """
+    """Initializes database tables based on registered SQLAlchemy models."""
     Base.metadata.create_all(bind=engine)
 
 

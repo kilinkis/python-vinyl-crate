@@ -7,24 +7,19 @@ from app.db.base import Base
 from app.db.session import engine
 from app.api.v1.router import api_router
 
-# Ensure all ORM models are registered with Base metadata before creating tables
+# Ensure all ORM models are registered with Base metadata before table creation
 import app.models  # noqa: F401
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    FastAPI Lifespan Context Manager.
-    Handles application startup and shutdown events.
-    
-    Analogy:
-    - Node.js / Express: Server listen callback & process.on('SIGTERM')
-    - PHP / Laravel: AppServiceProvider boot() and terminate()
+    Application lifespan context manager.
+    Handles startup schema initialization and graceful shutdown tasks.
     """
-    # Startup: create tables if they don't exist
+    # Startup: ensure tables exist
     Base.metadata.create_all(bind=engine)
     yield
-    # Shutdown: cleanup operations (if any)
 
 
 app = FastAPI(
@@ -34,18 +29,18 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
     description="""
-    🎵 **Vinyl Crate API** — A production-ready API for managing vinyl record inventories.
+    🎵 **Vinyl Crate API** — Production-ready API for managing vinyl record inventories.
     
     Features:
-    - Relational database persistence (SQLAlchemy 2.0 + SQLite/PostgreSQL)
-    - Full CRUD support with pagination and search
-    - Prepared for JWT Auth (Step 2) and Next.js / React Frontend (Step 3)
+    - Relational database persistence (SQLAlchemy 2.0 + SQLite / PostgreSQL)
+    - User authentication with JWT and bcrypt password hashing
+    - Multi-tenant crate isolation (user-owned record collections)
+    - Full CRUD support with search and pagination
     """,
     version="1.0.0",
 )
 
-# CORS Middleware (Cross-Origin Resource Sharing)
-# Ready for Step 3 (React at localhost:3000 or Next.js / Vite at localhost:5173)
+# CORS configuration for decoupled frontend clients
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -59,7 +54,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include v1 API Router
+# Mount API v1 router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
@@ -75,5 +70,5 @@ def read_root():
 
 @app.get("/health", tags=["Health"])
 def health_check():
-    """Health check endpoint for Docker / container orchestration."""
+    """Health check endpoint for container orchestration and uptime monitors."""
     return {"status": "healthy"}
