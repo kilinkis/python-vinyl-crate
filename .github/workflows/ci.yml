@@ -12,10 +12,10 @@ concurrency:
 
 jobs:
   # -------------------------------------------------------------
-  # 1. Backend Testing & Coverage
+  # 1. Backend Linting, Testing & Coverage
   # -------------------------------------------------------------
   backend-test:
-    name: Backend Pytest & Lint
+    name: Backend Lint & Pytest
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,12 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install ".[dev]"
+
+      - name: Run Ruff Linter & Formatter Check
+        run: |
+          ruff check app/ tests/
+          ruff format --check app/ tests/
 
       - name: Run Pytest Test Suite with Coverage
         run: |

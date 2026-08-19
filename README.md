@@ -50,8 +50,8 @@ docker compose up --build
 python3 -m venv venv
 source venv/bin/activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies (runtime + dev tools)
+pip install -e ".[dev]"
 
 # Start backend server
 uvicorn main:app --reload

@@ -6,4 +6,5 @@ class Base(DeclarativeBase):
     SQLAlchemy Declarative Base.
     Root metadata class for all database models.
     """
+
     pass

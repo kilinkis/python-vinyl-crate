@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
-from typing import Any, Union, Optional
+from typing import Any, Optional, Union
+
 import bcrypt
 import jwt
 
@@ -28,8 +29,10 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+
     payload = {
         "exp": expire,
         "iat": datetime.now(timezone.utc),

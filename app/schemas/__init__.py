@@ -1,12 +1,12 @@
 from app.schemas.record import (
     RecordBase,
     RecordCreate,
-    RecordUpdate,
-    RecordResponse,
     RecordListResponse,
+    RecordResponse,
+    RecordUpdate,
 )
-from app.schemas.user import UserBase, UserCreate, UserResponse
 from app.schemas.token import Token, TokenPayload
+from app.schemas.user import UserBase, UserCreate, UserResponse
 
 __all__ = [
     "RecordBase",

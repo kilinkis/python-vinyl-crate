@@ -1,5 +1,7 @@
 from typing import Dict
+
 from fastapi.testclient import TestClient
+
 from app.models.user import User
 
 
