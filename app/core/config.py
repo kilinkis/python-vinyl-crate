@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -15,13 +16,18 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Vinyl Crate API"
     API_V1_STR: str = "/api/v1"
 
-    # Defaults to an absolute path within project root to prevent CWD permission issues
+    # Database Configuration
     DATABASE_URL: str = f"sqlite:///{BASE_DIR / 'vinyl_crate.db'}"
 
     # JWT Authentication Configuration
     SECRET_KEY: str = "supersecretdevelopmentkeychangeinproduction1234567890"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+
+    # AI Recommender Configuration (pydantic-ai)
+    OPENAI_API_KEY: Optional[str] = None
+    ANTHROPIC_API_KEY: Optional[str] = None
+    AI_MODEL: str = "openai:gpt-4o-mini"
 
     model_config = SettingsConfigDict(
         env_file=".env",

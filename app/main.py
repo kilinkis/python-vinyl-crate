@@ -28,9 +28,15 @@ async def lifespan(app: FastAPI):
     Application lifespan context manager.
     Handles startup schema initialization and graceful shutdown tasks.
     """
-    # Startup: ensure tables exist
+    # Startup: ensure tables exist and demo seed data is populated
     Base.metadata.create_all(bind=engine)
-    logger.info("Database tables initialized successfully.")
+    from app.db.init_db import init_db
+    from app.db.session import SessionLocal
+
+    with SessionLocal() as db:
+        init_db(db)
+
+    logger.info("Database tables and seed data initialized successfully.")
     yield
 
 

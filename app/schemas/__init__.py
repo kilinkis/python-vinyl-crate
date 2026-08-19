@@ -1,3 +1,7 @@
+from app.schemas.recommendation import (
+    AlbumRecommendation,
+    RecommendationResponse,
+)
 from app.schemas.record import (
     RecordBase,
     RecordCreate,
@@ -14,6 +18,8 @@ __all__ = [
     "RecordUpdate",
     "RecordResponse",
     "RecordListResponse",
+    "AlbumRecommendation",
+    "RecommendationResponse",
     "UserBase",
     "UserCreate",
     "UserResponse",

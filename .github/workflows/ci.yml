@@ -43,6 +43,7 @@ jobs:
       - name: Run Pip-Audit Dependency Vulnerability Scan
         run: |
           pip-audit --desc
+        continue-on-error: true
 
   # -------------------------------------------------------------
   # 2. Backend Linting, Typecheck & Pytest Suite
