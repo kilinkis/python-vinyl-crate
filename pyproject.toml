@@ -28,6 +28,8 @@ dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
     "ruff>=0.3.0",
+    "mypy>=1.9.0",
+    "pip-audit>=2.7.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -73,3 +75,13 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
+
+# -------------------------------------------------------------
+# Mypy Static Type Checking
+# -------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true

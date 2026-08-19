@@ -1,4 +1,4 @@
-.PHONY: help install dev frontend test coverage lint format migrate migration docker-up docker-down docker-logs clean
+.PHONY: help install dev frontend test coverage lint format typecheck audit migrate migration docker-up docker-down docker-logs clean
 
 SHELL := /bin/bash
 
@@ -31,7 +31,7 @@ frontend: ## Start React frontend Vite dev server
 	cd frontend && npm run dev
 
 # -------------------------------------------------------------
-# Code Quality & Testing
+# Code Quality, Typechecking & Security
 # -------------------------------------------------------------
 lint: ## Check codebase for linting issues using Ruff
 	$(VENV)ruff check app/ tests/
@@ -39,6 +39,12 @@ lint: ## Check codebase for linting issues using Ruff
 format: ## Automatically format code and fix lint issues
 	$(VENV)ruff check --fix app/ tests/
 	$(VENV)ruff format app/ tests/
+
+typecheck: ## Run Mypy static type checker
+	$(VENV)mypy app/
+
+audit: ## Scan dependencies for security vulnerabilities using pip-audit
+	$(VENV)pip-audit
 
 test: ## Run full Pytest test suite
 	$(VENV)pytest -v
@@ -74,5 +80,6 @@ clean: ## Remove cache directories, build artifacts, and test coverage files
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".ruff_cache" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type f -name ".coverage" -delete
 	rm -rf dist/ build/ *.egg-info frontend/dist/

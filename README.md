@@ -2,7 +2,7 @@
 
 A production-ready full-stack application for cataloging, grading, valuing, and browsing vinyl record collections with interactive 3D crate flipping.
 
-Built with **FastAPI**, **SQLAlchemy 2.0**, **Alembic**, **PostgreSQL / SQLite**, **Pydantic v2**, **React**, **TypeScript**, **TailwindCSS**, and **Ruff**.
+Built with **FastAPI**, **SQLAlchemy 2.0**, **Alembic**, **PostgreSQL / SQLite**, **Pydantic v2**, **Mypy**, **React 18**, **TypeScript**, **TailwindCSS**, and **Ruff**.
 
 ---
 
@@ -16,17 +16,22 @@ Built with **FastAPI**, **SQLAlchemy 2.0**, **Alembic**, **PostgreSQL / SQLite**
   - High-precision request latency tracking with `X-Process-Time` middleware.
   - Interactive OpenAPI / Swagger UI at `/docs`.
 
-- **Frontend (React, TypeScript & TailwindCSS)**:
+- **Frontend (React 18, TypeScript & TailwindCSS)**:
   - **3D Crate Digging View**: Tactile sleeve browsing with gesture drag, mouse-wheel, arrow keys, and spinning vinyl disc animations.
   - **Grid Gallery View**: Responsive album sleeve grid with condition tags and quick actions.
   - **Crate Analytics**: Live total value, disc count, and pressing era span.
   - **AuthContext**: Persistent authentication state in `localStorage` with automatic Bearer token attachment.
 
-- **DevOps, Quality & Testing**:
+- **DevOps, Security & Testing**:
   - Unified configuration with modern **`pyproject.toml`** (PEP 621).
   - Ultra-fast linting and code formatting powered by **Ruff**.
-  - Comprehensive Pytest test suite with **96% code coverage** and isolated in-memory test database fixtures.
-  - Automated **GitHub Actions CI** pipeline for linting, testing, and frontend builds.
+  - Strict compile-time type safety with **Mypy**.
+  - Automated **GitHub Actions CI** pipeline for:
+    - 🔑 **Gitleaks**: Automated secret scanning to prevent credential leaks.
+    - 📦 **pip-audit**: Dependency vulnerability auditing against PyPA/OSV databases.
+    - 🏷️ **Mypy**: Backend static type verification.
+    - 🧪 **Pytest**: 18 automated tests with **96% code coverage**.
+    - ⚛️ **Frontend Build**: TypeScript typecheck and production build.
   - Production-grade `Dockerfile` with non-root security and layer caching.
   - `docker-compose.yml` for 1-command full-stack orchestration (**FastAPI + PostgreSQL 16 + React**).
 
@@ -50,13 +55,17 @@ make frontend
 make test
 make coverage
 
-# ✨ 5. Lint and format code with Ruff
+# ✨ 5. Lint, format, and typecheck code
 make format
+make typecheck
 
-# 🗄️ 6. Run database migrations
+# 🔒 6. Run dependency vulnerability audit
+make audit
+
+# 🗄️ 7. Run database migrations
 make migrate
 
-# 🐳 7. Run full stack in Docker Compose
+# 🐳 8. Run full stack in Docker Compose
 make docker-up
 ```
 
@@ -101,18 +110,24 @@ npm run dev
 
 ---
 
-## 🧪 Testing & Code Quality
+## 🧪 Testing, Quality & Security Checks
 
 ```bash
-# Run full Pytest test suite
+# 1. Run full Pytest test suite
 pytest -v
 
-# Run with test coverage report
+# 2. Run with test coverage report
 pytest --cov=app --cov-report=term-missing tests/
 
-# Check and auto-format with Ruff
+# 3. Check and auto-format with Ruff
 ruff check --fix app/ tests/
 ruff format app/ tests/
+
+# 4. Run static type checker
+mypy app/
+
+# 5. Run dependency vulnerability audit
+pip-audit
 ```
 
 ---
