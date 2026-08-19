@@ -35,7 +35,12 @@ def list_records(
         limit=limit,
         search=search,
     )
-    return RecordListResponse(items=items, total=total, skip=skip, limit=limit)
+    return RecordListResponse(
+        items=[RecordResponse.model_validate(r) for r in items],
+        total=total,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.post("/", response_model=RecordResponse, status_code=status.HTTP_201_CREATED)

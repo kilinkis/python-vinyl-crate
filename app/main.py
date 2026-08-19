@@ -5,12 +5,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-# Ensure all ORM models are registered with Base metadata before table creation
-import app.models  # noqa: F401
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
+
+# Ensure all ORM models are registered with Base metadata before table creation
+from app.models import Record, User  # noqa: F401
 
 # Structured logging configuration
 logging.basicConfig(

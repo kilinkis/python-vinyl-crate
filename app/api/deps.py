@@ -1,3 +1,5 @@
+from typing import Optional
+
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -31,7 +33,7 @@ def get_current_user(
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
         )
-        user_id_str: str = payload.get("sub")
+        user_id_str: Optional[str] = payload.get("sub")
         if user_id_str is None:
             raise credentials_exception
         user_id = int(user_id_str)
