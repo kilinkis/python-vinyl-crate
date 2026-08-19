@@ -1,5 +1,6 @@
-from typing import Optional, List, Tuple
-from sqlalchemy import select, func, or_, and_
+from typing import List, Optional, Tuple
+
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.models.record import Record
@@ -49,11 +50,7 @@ def get_records(
 
     # Fetch paginated slice
     query = (
-        select(Record)
-        .where(combined_filter)
-        .order_by(Record.id.desc())
-        .offset(skip)
-        .limit(limit)
+        select(Record).where(combined_filter).order_by(Record.id.desc()).offset(skip).limit(limit)
     )
     records = list(db.execute(query).scalars().all())
 

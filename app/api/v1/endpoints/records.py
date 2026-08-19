@@ -1,17 +1,18 @@
 from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
 from app.api.deps import get_current_active_user
+from app.crud import record as crud_record
+from app.db.session import get_db
 from app.models.user import User
 from app.schemas.record import (
     RecordCreate,
-    RecordUpdate,
-    RecordResponse,
     RecordListResponse,
+    RecordResponse,
+    RecordUpdate,
 )
-from app.crud import record as crud_record
 
 router = APIRouter()
 

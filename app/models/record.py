@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
-from sqlalchemy import String, Integer, Float, DateTime, ForeignKey, func
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -13,6 +14,7 @@ class Record(Base):
     """
     SQLAlchemy ORM model representing the 'records' table.
     """
+
     __tablename__ = "records"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -22,7 +24,7 @@ class Record(Base):
     condition: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     cover_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    
+
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,

@@ -1,16 +1,17 @@
-from typing import Generator, Dict
+from typing import Dict, Generator
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.main import app
+from app.core.security import create_access_token, get_password_hash
 from app.db.base import Base
 from app.db.session import get_db
-from app.core.security import create_access_token, get_password_hash
-from app.models.user import User
+from app.main import app
 from app.models.record import Record
+from app.models.user import User
 
 # Use in-memory SQLite with StaticPool for isolated fast test runs
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -38,6 +39,7 @@ def db() -> Generator[Session, None, None]:
 @pytest.fixture(scope="function")
 def client(db: Session) -> Generator[TestClient, None, None]:
     """Provides a TestClient with overridden get_db dependency."""
+
     def override_get_db():
         try:
             yield db

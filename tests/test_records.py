@@ -1,5 +1,7 @@
 from typing import Dict
+
 from fastapi.testclient import TestClient
+
 from app.models.record import Record
 
 
@@ -27,7 +29,10 @@ def test_create_record_authenticated(
     assert data["release_year"] == 2013
     assert data["condition"] == "Mint"
     assert data["price"] == 49.99
-    assert data["cover_url"] == "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"
+    assert (
+        data["cover_url"]
+        == "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"
+    )
     assert "id" in data
     assert "user_id" in data
 

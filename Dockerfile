@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install python dependencies first for Docker layer caching
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy packaging metadata first for Docker layer caching
+COPY pyproject.toml README.md ./
+RUN pip install --no-cache-dir .
 
 # Copy backend application source code
 COPY . .

@@ -6,9 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
+import app.models  # noqa: F401
 from app.db.base import Base
 from app.db.session import engine
-import app.models  # noqa: F401
 
 
 def init_db() -> None:

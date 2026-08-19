@@ -1,16 +1,16 @@
 import logging
 import time
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+# Ensure all ORM models are registered with Base metadata before table creation
+import app.models  # noqa: F401
+from app.api.v1.router import api_router
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
-from app.api.v1.router import api_router
-
-# Ensure all ORM models are registered with Base metadata before table creation
-import app.models  # noqa: F401
 
 # Structured logging configuration
 logging.basicConfig(
@@ -41,7 +41,7 @@ app = FastAPI(
     lifespan=lifespan,
     description="""
     🎵 **Vinyl Crate API** — Production-ready API for managing vinyl record inventories.
-    
+
     Features:
     - Relational database persistence (SQLAlchemy 2.0 + SQLite / PostgreSQL)
     - User authentication with JWT and bcrypt password hashing
@@ -50,6 +50,7 @@ app = FastAPI(
     """,
     version="1.0.0",
 )
+
 
 # Request logging and latency tracking middleware
 @app.middleware("http")
