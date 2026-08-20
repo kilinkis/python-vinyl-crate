@@ -51,3 +51,20 @@ export interface Token {
   access_token: string;
   token_type: string;
 }
+
+export interface AlbumRecommendation {
+  title: string;
+  artist: string;
+  release_year: number;
+  genre: string;
+  estimated_price: number;
+  reason_for_recommendation: string;
+  suggested_condition: string;
+  cover_url?: string | null;
+}
+
+export interface RecommendationResponse {
+  curator_summary: string;
+  recommendations: AlbumRecommendation[];
+  total_crate_size_analyzed: number;
+}
