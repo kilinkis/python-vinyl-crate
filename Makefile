@@ -2,8 +2,11 @@
 
 SHELL := /bin/bash
 
-# Automatically use local virtualenv binaries if present, otherwise fallback to system PATH
-VENV := $(shell if [ -d "./venv/bin" ]; then echo "./venv/bin/"; fi)
+# Detect uv package manager (global or local venv)
+UV := $(shell if command -v uv >/dev/null 2>&1; then echo "uv"; elif [ -f "./.venv/bin/uv" ]; then echo "./.venv/bin/uv"; elif [ -f "./venv/bin/uv" ]; then echo "./venv/bin/uv"; fi)
+
+# Automatically use local virtualenv binaries (.venv or venv) if present
+VENV := $(shell if [ -d "./.venv/bin" ]; then echo "./.venv/bin/"; elif [ -d "./venv/bin" ]; then echo "./venv/bin/"; fi)
 
 # Default target: display help menu
 help: ## Show this help message
@@ -16,9 +19,16 @@ help: ## Show this help message
 # -------------------------------------------------------------
 # Setup & Installation
 # -------------------------------------------------------------
-install: ## Install both backend and frontend dependencies
-	$(VENV)pip install --upgrade pip
-	$(VENV)pip install -e ".[dev]"
+install: ## Install backend (via uv) and frontend dependencies
+	@if [ -n "$(UV)" ]; then \
+		echo "⚡ Installing with uv..."; \
+		$(UV) venv .venv; \
+		$(UV) pip install -e ".[dev]"; \
+	else \
+		echo "📦 Installing with standard pip..."; \
+		$(VENV)pip install --upgrade pip; \
+		$(VENV)pip install -e ".[dev]"; \
+	fi
 	cd frontend && npm install
 
 # -------------------------------------------------------------
