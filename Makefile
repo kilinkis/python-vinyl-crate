@@ -1,4 +1,4 @@
-.PHONY: help install dev frontend test coverage lint format typecheck audit migrate migration docker-up docker-down docker-logs clean
+.PHONY: help install dev frontend test test-frontend test-all coverage lint format typecheck audit migrate migration docker-up docker-down docker-logs clean
 
 SHELL := /bin/bash
 
@@ -56,8 +56,15 @@ typecheck: ## Run Mypy static type checker
 audit: ## Scan dependencies for security vulnerabilities using pip-audit
 	$(VENV)pip-audit
 
-test: ## Run full Pytest test suite
+test: ## Run backend Pytest test suite
 	$(VENV)pytest -v
+
+test-frontend: ## Run frontend React Vitest test suite
+	cd frontend && npm test
+
+test-all: ## Run both backend (Pytest) and frontend (Vitest) test suites
+	$(VENV)pytest -v
+	cd frontend && npm test
 
 coverage: ## Run Pytest test suite with code coverage report
 	$(VENV)pytest -v --cov=app --cov-report=term-missing tests/
