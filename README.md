@@ -4,14 +4,14 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![uv](https://img.shields.io/badge/uv-Astral%20Package%20Manager-DE5FE9?style=flat-square&logo=python&logoColor=white)](https://astral.sh/uv)
 [![Pydantic-AI](https://img.shields.io/badge/Pydantic--AI-Agent%20Framework-E92063?style=flat-square&logo=pydantic&logoColor=white)](https://ai.pydantic.dev/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Pytest Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org/)
 [![Type Checked](https://img.shields.io/badge/Mypy-Strict%20Type%20Safe-blue?style=flat-square)](https://mypy-lang.org/)
 [![CI Pipeline](https://img.shields.io/badge/GitHub%20Actions-CI%20Enabled-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/)
 
-A modern, production-grade full-stack web application designed for audiophile vinyl collectors. Features an **AI-powered record curator** using **Pydantic-AI**, an interactive **3D crate-flipping browsing experience**, multi-tenant JWT security, automated database migrations, and blazing fast tooling powered by **`uv`** and **Ruff**.
+A modern, production-grade full-stack web application designed for audiophile vinyl collectors. Features an **AI-powered record curator** using **Pydantic-AI**, an interactive **3D crate-flipping browsing experience**, multi-tenant JWT security, automated database migrations, and blazing fast tooling powered by **`uv`**, **Ruff**, and **React 19**.
 
 ---
 
@@ -23,7 +23,7 @@ A modern, production-grade full-stack web application designed for audiophile vi
                                   └──────┬───────────────────────────────┬───────┘
                                          │                               │
                                          ▼                               ▼
-                              [ React 18 + Vite Frontend ]      [ Pydantic-AI Agent ]
+                              [ React 19 + Vite Frontend ]      [ Pydantic-AI Agent ]
                               - 3D Vinyl Crate Flipping         - Audiophile Curator
                               - Live Portfolio Valuation        - Structured JSON Output
                               - Responsive Grid Gallery         - Multi-LLM Provider
