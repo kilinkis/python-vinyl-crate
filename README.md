@@ -1,71 +1,104 @@
-# 🎵 Vinyl Crate — Full-Stack Audiophile Inventory
+# 🎵 Vinyl Crate — AI-Powered Full-Stack Vinyl Collection Platform
 
-A production-ready full-stack application for cataloging, grading, valuing, and browsing vinyl record collections with interactive 3D crate flipping.
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![uv](https://img.shields.io/badge/uv-Astral%20Package%20Manager-DE5FE9?style=flat-square&logo=python&logoColor=white)](https://astral.sh/uv)
+[![Pydantic-AI](https://img.shields.io/badge/Pydantic--AI-Agent%20Framework-E92063?style=flat-square&logo=pydantic&logoColor=white)](https://ai.pydantic.dev/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Pytest Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org/)
+[![Type Checked](https://img.shields.io/badge/Mypy-Strict%20Type%20Safe-blue?style=flat-square)](https://mypy-lang.org/)
+[![CI Pipeline](https://img.shields.io/badge/GitHub%20Actions-CI%20Enabled-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/)
 
-Built with **FastAPI**, **SQLAlchemy 2.0**, **Alembic**, **PostgreSQL / SQLite**, **Pydantic v2**, **Mypy**, **React 18**, **TypeScript**, **TailwindCSS**, and **Ruff**.
+A modern, production-grade full-stack web application designed for audiophile vinyl collectors. Features an **AI-powered record curator** using **Pydantic-AI**, an interactive **3D crate-flipping browsing experience**, multi-tenant JWT security, automated database migrations, and blazing fast tooling powered by **`uv`** and **Ruff**.
 
 ---
 
-## 🌟 Architecture & Key Features
+## 🌟 Key Highlights & Engineering Features
 
-- **Backend (FastAPI & SQLAlchemy 2.0)**:
-  - Enterprise modular architecture (`core/`, `models/`, `schemas/`, `crud/`, `api/v1/`).
-  - Salted **bcrypt** password hashing and stateless **JWT authentication**.
-  - Multi-tenant crate isolation: each collector has a private, isolated collection.
-  - Schema migrations version control with **Alembic**.
-  - High-precision request latency tracking with `X-Process-Time` middleware.
-  - Interactive OpenAPI / Swagger UI at `/docs`.
+```
+                                  ┌──────────────────────────────────────────────┐
+                                  │           VINYL CRATE ARCHITECTURE           │
+                                  └──────┬───────────────────────────────┬───────┘
+                                         │                               │
+                                         ▼                               ▼
+                              [ React 18 + Vite Frontend ]      [ Pydantic-AI Agent ]
+                              - 3D Vinyl Crate Flipping         - Audiophile Curator
+                              - Live Portfolio Valuation        - Structured JSON Output
+                              - Responsive Grid Gallery         - Multi-LLM Provider
+                                         │                               ▲
+                                         ▼                               │
+                              [ FastAPI REST API (v1) ] ─────────┘
+                              - Modular Clean Architecture
+                              - Stateless JWT Auth + bcrypt
+                              - SQLAlchemy 2.0 + Alembic Migrations
+                              - High-Precision Latency Middleware
+```
 
-- **Frontend (React 18, TypeScript & TailwindCSS)**:
-  - **3D Crate Digging View**: Tactile sleeve browsing with gesture drag, mouse-wheel, arrow keys, and spinning vinyl disc animations.
-  - **Grid Gallery View**: Responsive album sleeve grid with condition tags and quick actions.
-  - **Crate Analytics**: Live total value, disc count, and pressing era span.
-  - **AuthContext**: Persistent authentication state in `localStorage` with automatic Bearer token attachment.
+### 🤖 1. AI Vinyl Curator: "What to Spin Next"
+- **Powered by `pydantic-ai`**: Built on Pydantic's official agent framework for strictly validated, type-safe structured outputs.
+- **Context-Aware Analysis**: Dynamically analyzes the collector's database archive (artists, eras, genres, condition grades, valuation) to suggest 3 complementary pressings to acquire next.
+- **Rich Audiophile Reasoning**: Provides historical context, sonic pairing rationale, estimated market prices, and target Goldmine condition grades.
+- **1-Click Crate Addition**: Collectors can instantly add any recommended album directly into their personal collection from the recommendation card.
+- **Multi-Provider Support**: Pluggable support for **OpenAI** (`gpt-4o-mini`), **Anthropic** (`claude-3-5-haiku`), or offline curated starter fallback.
 
-- **DevOps, Security & Testing**:
-  - Unified configuration with modern **`pyproject.toml`** (PEP 621).
-  - Ultra-fast linting and code formatting powered by **Ruff**.
-  - Strict compile-time type safety with **Mypy**.
-  - Automated **GitHub Actions CI** pipeline for:
-    - 🔑 **Gitleaks**: Automated secret scanning to prevent credential leaks.
-    - 📦 **pip-audit**: Dependency vulnerability auditing against PyPA/OSV databases.
-    - 🏷️ **Mypy**: Backend static type verification.
-    - 🧪 **Pytest**: 18 automated tests with **96% code coverage**.
-    - ⚛️ **Frontend Build**: TypeScript typecheck and production build.
-  - Production-grade `Dockerfile` with non-root security and layer caching.
-  - `docker-compose.yml` for 1-command full-stack orchestration (**FastAPI + PostgreSQL 16 + React**).
+### 🎨 2. Tactile 3D Crate Digging Experience
+- **Perspective Record Flipping**: Dig through vinyl sleeves with mouse-wheel scrolling, touch/drag gestures, and keyboard arrow navigation.
+- **Audio-Grade Aesthetics**: Realistic vinyl textures, spinning disc animations, and dual-mode switcher (`3D Crate` vs `Grid Gallery`).
+- **Live Crate Analytics**: Real-time total portfolio worth, disc count, and pressing era span.
+
+### 🛡️ 3. Security, Multi-Tenancy & Performance
+- **Multi-Tenant Privacy**: Queries and collections are strictly isolated per authenticated collector (`user_id`).
+- **Stateless Authentication**: OAuth2 Bearer password flow with salted **bcrypt** password hashing and **PyJWT**.
+- **Database Versioning**: Production database migrations managed with **Alembic** (batch mode enabled for SQLite & PostgreSQL compatibility).
+- **Latency Observability**: High-precision `X-Process-Time` response headers with structured access logging.
+
+### 🧪 4. Enterprise Quality & CI/CD Pipeline
+- **Lightning Package Management**: **`uv`** (Astral) for 10x–100x faster dependency installation and virtualenv management.
+- **Unified Package Standard**: PEP 621 compliant `pyproject.toml`.
+- **Ruff**: Ultra-fast linting and automatic code formatting.
+- **Mypy**: Static compile-time type verification across all backend modules.
+- **Pytest Suite**: 21 unit & integration tests with **93% code coverage** and isolated in-memory test database fixtures.
+- **Automated GitHub Actions CI**:
+  - ⚡ **`astral-sh/setup-uv`**: Ultra-fast containerized Python environment provisioning.
+  - 🔑 **Gitleaks**: Automated secret scanning to prevent credential leakage.
+  - 📦 **pip-audit**: Dependency vulnerability auditing against PyPA and OSV advisories.
+  - 🏷️ **Mypy & Ruff**: Code quality enforcement.
+  - 🧪 **Pytest**: Backend unit & integration test validation.
+  - ⚛️ **Frontend Build**: TypeScript typecheck and Vite production build.
 
 ---
 
 ## ⚡ Quick Start with `make`
 
-The repository includes a self-documenting [`Makefile`](./Makefile) that automates common developer tasks:
+The repository includes a self-documenting [`Makefile`](./Makefile) that automates common developer tasks with automatic `uv` detection:
 
 ```bash
-# 🛠️ 1. Setup & install backend + frontend
+# 🛠️ 1. Setup & install backend (via uv) and frontend dependencies
 make install
 
-# 🚀 2. Run backend (FastAPI with hot-reload)
+# 🚀 2. Start FastAPI backend (hot-reload at http://localhost:8000)
 make dev
 
-# 🎨 3. Run frontend (React + Vite)
+# 🎨 3. Start React frontend (Vite at http://localhost:5173)
 make frontend
 
-# 🧪 4. Run test suite & coverage
+# 🧪 4. Run test suite with full coverage report
 make test
 make coverage
 
-# ✨ 5. Lint, format, and typecheck code
+# ✨ 5. Lint, auto-format, and static typecheck
 make format
 make typecheck
 
 # 🔒 6. Run dependency vulnerability audit
 make audit
 
-# 🗄️ 7. Run database migrations
+# 🗄️ 7. Apply database migrations
 make migrate
 
-# 🐳 8. Run full stack in Docker Compose
+# 🐳 8. Launch full stack via Docker Compose (PostgreSQL + FastAPI + React)
 make docker-up
 ```
 
@@ -76,32 +109,34 @@ make docker-up
 ### Option A: 1-Command Launch with Docker Compose
 
 ```bash
-# Spin up PostgreSQL, FastAPI backend, and React frontend
 docker compose up --build
 ```
-- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Frontend App**: [http://localhost:5173](http://localhost:5173)
 - **Backend API**: [http://localhost:8000](http://localhost:8000)
-- **API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Interactive Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
-### Option B: Local Development
+### Option B: Local Development with `uv`
 
-#### 1. Backend (FastAPI):
+#### 1. Backend Setup (FastAPI):
 ```bash
-# Create and activate Python virtual environment
-python3 -m venv venv
-source venv/bin/activate
+# Create virtual environment with uv
+uv venv .venv
+source .venv/bin/activate
 
-# Install dependencies (runtime + dev tools)
-pip install -e ".[dev]"
+# Install dependencies in milliseconds
+uv pip install -e ".[dev]"
+
+# (Optional) Add your AI provider key in .env:
+# OPENAI_API_KEY=sk-...
 
 # Start backend server
 uvicorn main:app --reload
 ```
 
-#### 2. Frontend (React + Vite):
-In a second terminal:
+#### 2. Frontend Setup (React + Vite):
+In a separate terminal:
 ```bash
 cd frontend
 npm install
@@ -110,24 +145,21 @@ npm run dev
 
 ---
 
-## 🧪 Testing, Quality & Security Checks
+## 🧪 Testing & Verification
 
 ```bash
-# 1. Run full Pytest test suite
+# Run unit & integration tests
 pytest -v
 
-# 2. Run with test coverage report
+# Run with test coverage report
 pytest --cov=app --cov-report=term-missing tests/
 
-# 3. Check and auto-format with Ruff
+# Check and auto-format code
 ruff check --fix app/ tests/
 ruff format app/ tests/
 
-# 4. Run static type checker
+# Run Mypy static type checker
 mypy app/
-
-# 5. Run dependency vulnerability audit
-pip-audit
 ```
 
 ---

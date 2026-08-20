@@ -6,6 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Install uv binary from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
 # Install runtime and build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -15,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy packaging metadata first for Docker layer caching
 COPY pyproject.toml README.md ./
-RUN pip install --no-cache-dir .
+RUN uv pip install --system --no-cache .
 
 # Copy backend application source code
 COPY . .
