@@ -11,29 +11,52 @@
 [![Type Checked](https://img.shields.io/badge/Mypy-Strict%20Type%20Safe-blue?style=flat-square)](https://mypy-lang.org/)
 [![CI Pipeline](https://img.shields.io/badge/GitHub%20Actions-CI%20Enabled-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/)
 
-A modern, production-grade full-stack web application designed for audiophile vinyl collectors. Features an **AI-powered record curator** using **Pydantic-AI**, an interactive **3D crate-flipping browsing experience**, multi-tenant JWT security, automated database migrations, and blazing fast tooling powered by **`uv`**, **Ruff**, and **React 19**.
+A modern, production-grade full-stack web application designed for audiophile vinyl collectors. Features an **AI-powered record curator** using **Pydantic-AI**, an interactive **vinyl crate slider & gallery browsing experience**, multi-tenant JWT security, automated database migrations, and blazing fast tooling powered by **`uv`**, **Ruff**, and **React 19**.
 
 ---
 
 ## 🌟 Key Highlights & Engineering Features
 
-```
-                                  ┌──────────────────────────────────────────────┐
-                                  │           VINYL CRATE ARCHITECTURE           │
-                                  └──────┬───────────────────────────────┬───────┘
-                                         │                               │
-                                         ▼                               ▼
-                              [ React 19 + Vite Frontend ]      [ Pydantic-AI Agent ]
-                              - 3D Vinyl Crate Flipping         - Audiophile Curator
-                              - Live Portfolio Valuation        - Structured JSON Output
-                              - Responsive Grid Gallery         - Multi-LLM Provider
-                                         │                               ▲
-                                         ▼                               │
-                              [ FastAPI REST API (v1) ] ─────────┘
-                              - Modular Clean Architecture
-                              - Stateless JWT Auth + bcrypt
-                              - SQLAlchemy 2.0 + Alembic Migrations
-                              - High-Precision Latency Middleware
+```mermaid
+graph TD
+    subgraph Client ["Frontend (React 19 + TypeScript + Vite)"]
+        UI["Interactive UI / Crate Slider & Gallery"]
+        Modal["AI Recommendation Modal"]
+        AuthContext["Auth Context (JWT State)"]
+    end
+
+    subgraph Backend ["FastAPI Backend (Python 3.11 + uv)"]
+        Router["API Router (/api/v1)"]
+        AuthEndpoint["/auth (JWT + bcrypt)"]
+        RecordsEndpoint["/records (CRUD & Multi-Tenancy)"]
+        RecEndpoint["/recommendations (Curator API)"]
+        AICurator["AI Curator Service (pydantic-ai)"]
+    end
+
+    subgraph Database ["Data Layer"]
+        DB[(PostgreSQL / SQLite)]
+        Alembic["Alembic Migrations"]
+    end
+
+    subgraph LLM ["AI Providers"]
+        OpenAI["OpenAI (gpt-4o-mini)"]
+        Anthropic["Anthropic (claude-3-5-haiku)"]
+    end
+
+    UI -->|REST API Requests| Router
+    Modal -->|Fetch Recommendations| RecEndpoint
+    Router --> AuthEndpoint
+    Router --> RecordsEndpoint
+    Router --> RecEndpoint
+    
+    RecordsEndpoint -->|SQLAlchemy 2.0| DB
+    AuthEndpoint -->|User Verification| DB
+    Alembic -.->|Schema Versioning| DB
+
+    RecEndpoint -->|Fetch User Collection| DB
+    RecEndpoint --> AICurator
+    AICurator -->|Structured Output| OpenAI
+    AICurator -->|Structured Output| Anthropic
 ```
 
 ### 🤖 1. AI Vinyl Curator: "What to Spin Next"
@@ -43,10 +66,11 @@ A modern, production-grade full-stack web application designed for audiophile vi
 - **1-Click Crate Addition**: Collectors can instantly add any recommended album directly into their personal collection from the recommendation card.
 - **Multi-Provider Support**: Pluggable support for **OpenAI** (`gpt-4o-mini`), **Anthropic** (`claude-3-5-haiku`), or offline curated starter fallback.
 
-### 🎨 2. Tactile 3D Crate Digging Experience
-- **Perspective Record Flipping**: Dig through vinyl sleeves with mouse-wheel scrolling, touch/drag gestures, and keyboard arrow navigation.
-- **Audio-Grade Aesthetics**: Realistic vinyl textures, spinning disc animations, and dual-mode switcher (`3D Crate` vs `Grid Gallery`).
-- **Live Crate Analytics**: Real-time total portfolio worth, disc count, and pressing era span.
+### 🎛️ 2. Interactive Vinyl Crate Slider & Gallery Views
+- **Tactile Sleeve Slider**: Browse albums smoothly with keyboard navigation, gesture dragging, and responsive sleeve transitions.
+- **Spinning Vinyl Disc Animations**: Dynamic sliding vinyl discs on hover with realistic vinyl grooves and label details.
+- **Dual-Mode Switcher**: Effortlessly switch between interactive **Slider Crate** view and dense **Grid Gallery** view.
+- **Live Crate Analytics**: Real-time stats banner displaying total portfolio valuation, disc count, average album price, and pressing era span.
 
 ### 🛡️ 3. Security, Multi-Tenancy & Performance
 - **Multi-Tenant Privacy**: Queries and collections are strictly isolated per authenticated collector (`user_id`).
