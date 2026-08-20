@@ -131,6 +131,9 @@ uv pip install -e ".[dev]"
 # (Optional) Add your AI provider key in .env:
 # OPENAI_API_KEY=sk-...
 
+# (Optional) Add your AI provider key in .env:
+# OPENAI_API_KEY=sk-...
+
 # Start backend server
 uvicorn main:app --reload
 ```

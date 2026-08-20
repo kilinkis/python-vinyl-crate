@@ -16,6 +16,7 @@ import { RecordCrate } from './components/RecordCrate';
 import { RecordModal } from './components/RecordModal';
 import { AuthModal } from './components/AuthModal';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
+import { RecommendationModal } from './components/RecommendationModal';
 import { EmptyState } from './components/EmptyState';
 import { RecordItem, RecordCreateInput } from './types';
 import {
@@ -27,7 +28,7 @@ import {
 
 export const App: React.FC = () => {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  
+
   // State
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [isLoadingRecords, setIsLoadingRecords] = useState(false);
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState<RecordItem | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isRecommendationsOpen, setIsRecommendationsOpen] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState<RecordItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -154,6 +156,7 @@ export const App: React.FC = () => {
           setIsRecordModalOpen(true);
         }}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenRecommendations={() => setIsRecommendationsOpen(true)}
       />
 
       {/* Main Content */}
@@ -205,8 +208,8 @@ export const App: React.FC = () => {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 mb-3 border border-purple-500/20">
                   <Sparkles className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading font-bold text-white text-base">Personal Isolation</h3>
-                <p className="text-xs text-zinc-400 mt-1">Multi-tenant JWT security keeps your collection private and isolated.</p>
+                <h3 className="font-heading font-bold text-white text-base">AI Vinyl Curator</h3>
+                <p className="text-xs text-zinc-400 mt-1">Type-safe AI recommendations for what album to spin and buy next using Pydantic-AI.</p>
               </div>
             </div>
           </div>
@@ -345,6 +348,12 @@ export const App: React.FC = () => {
         }}
         onSubmit={handleSaveRecord}
         editingRecord={editingRecord}
+      />
+
+      <RecommendationModal
+        isOpen={isRecommendationsOpen}
+        onClose={() => setIsRecommendationsOpen(false)}
+        onAddToCrate={handleSaveRecord}
       />
 
       <AuthModal
