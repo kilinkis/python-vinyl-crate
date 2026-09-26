@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Disc3,
   SlidersHorizontal,
@@ -19,22 +19,16 @@ import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { RecommendationModal } from './components/RecommendationModal';
 import { EmptyState } from './components/EmptyState';
 import { RecordItem, RecordCreateInput } from './types';
-import {
-  getRecords,
-  createRecord,
-  updateRecord,
-  deleteRecord,
-} from './services/records';
+import { useCrateWorkflow } from './hooks/useCrateWorkflow';
 
 export const App: React.FC = () => {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
 
-  // State
-  const [records, setRecords] = useState<RecordItem[]>([]);
-  const [isLoadingRecords, setIsLoadingRecords] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [conditionFilter, setConditionFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'newest' | 'price_high' | 'price_low' | 'year' | 'title'>('newest');
+  const {
+    records, visibleRecords, isLoadingRecords, isDeleting,
+    searchQuery, setSearchQuery, conditionFilter, setConditionFilter,
+    sortBy, setSortBy, clearFilters, refreshRecords, saveRecord, removeRecord,
+  } = useCrateWorkflow(user?.id ?? null);
   const [viewMode, setViewMode] = useState<'crate' | 'grid'>('crate');
 
   // Modals
@@ -43,96 +37,15 @@ export const App: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isRecommendationsOpen, setIsRecommendationsOpen] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState<RecordItem | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Fetch Records from FastAPI backend
-  const fetchRecords = useCallback(async () => {
-    if (!isAuthenticated) return;
-    setIsLoadingRecords(true);
-    try {
-      const response = await getRecords({ limit: 100 });
-      setRecords(response.items);
-    } catch (err) {
-      console.error('Failed to fetch records:', err);
-    } finally {
-      setIsLoadingRecords(false);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchRecords();
-    } else {
-      setRecords([]);
-    }
-  }, [isAuthenticated, fetchRecords]);
-
-  // Handle Record Creation / Editing
   const handleSaveRecord = async (data: RecordCreateInput) => {
-    if (editingRecord) {
-      const updated = await updateRecord(editingRecord.id, data);
-      setRecords((prev) =>
-        prev.map((r) => (r.id === updated.id ? updated : r))
-      );
-    } else {
-      const created = await createRecord(data);
-      setRecords((prev) => [created, ...prev]);
-    }
+    await saveRecord(data, editingRecord?.id);
   };
 
-  // Handle Delete
   const handleConfirmDelete = async () => {
     if (!recordToDelete) return;
-    setIsDeleting(true);
-    try {
-      await deleteRecord(recordToDelete.id);
-      setRecords((prev) => prev.filter((r) => r.id !== recordToDelete.id));
-      setRecordToDelete(null);
-    } catch (err) {
-      console.error('Failed to delete record:', err);
-    } finally {
-      setIsDeleting(false);
-    }
+    if (await removeRecord(recordToDelete.id)) setRecordToDelete(null);
   };
-
-  // Filtered & Sorted Records
-  const processedRecords = useMemo(() => {
-    let result = [...records];
-
-    // Search query filter (title or artist)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (r) =>
-          r.title.toLowerCase().includes(q) ||
-          r.artist.toLowerCase().includes(q)
-      );
-    }
-
-    // Condition filter
-    if (conditionFilter !== 'All') {
-      result = result.filter((r) => r.condition === conditionFilter);
-    }
-
-    // Sorting
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case 'price_high':
-          return b.price - a.price;
-        case 'price_low':
-          return a.price - b.price;
-        case 'year':
-          return b.release_year - a.release_year;
-        case 'title':
-          return a.title.localeCompare(b.title);
-        case 'newest':
-        default:
-          return b.id - a.id;
-      }
-    });
-
-    return result;
-  }, [records, searchQuery, conditionFilter, sortBy]);
 
   if (authLoading) {
     return (
@@ -287,7 +200,7 @@ export const App: React.FC = () => {
                 </div>
 
                 <button
-                  onClick={fetchRecords}
+                  onClick={refreshRecords}
                   title="Refresh Crate"
                   className="rounded-xl border border-zinc-800 bg-zinc-900 p-2 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
                 >
@@ -297,22 +210,19 @@ export const App: React.FC = () => {
             </div>
 
             {/* Content Display: 3D Crate, Grid View, or Empty State */}
-            {processedRecords.length === 0 ? (
+            {visibleRecords.length === 0 ? (
               <EmptyState
                 isSearching={!!searchQuery || conditionFilter !== 'All'}
                 onOpenAddModal={() => {
                   setEditingRecord(null);
                   setIsRecordModalOpen(true);
                 }}
-                onClearSearch={() => {
-                  setSearchQuery('');
-                  setConditionFilter('All');
-                }}
+                onClearSearch={clearFilters}
               />
             ) : viewMode === 'crate' ? (
               /* 3D Crate Flipping Mode */
               <RecordCrate
-                records={processedRecords}
+                records={visibleRecords}
                 onEdit={(r) => {
                   setEditingRecord(r);
                   setIsRecordModalOpen(true);
@@ -322,7 +232,7 @@ export const App: React.FC = () => {
             ) : (
               /* Grid Gallery Mode */
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {processedRecords.map((record) => (
+                {visibleRecords.map((record) => (
                   <RecordCard
                     key={record.id}
                     record={record}
