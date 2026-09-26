@@ -96,3 +96,10 @@ def init_db(db: Session) -> None:
             db.add(record)
         db.commit()
         logger.info("Database seeding complete.")
+
+
+if __name__ == "__main__":
+    from app.db.session import SessionLocal
+
+    with SessionLocal() as session:
+        init_db(session)

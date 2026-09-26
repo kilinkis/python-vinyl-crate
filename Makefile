@@ -35,6 +35,8 @@ install: ## Install backend (via uv) and frontend dependencies
 # Local Development
 # -------------------------------------------------------------
 dev: ## Start FastAPI backend server with hot-reloading
+	$(VENV)alembic upgrade head
+	$(VENV)python -m app.db.init_db
 	$(VENV)uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 frontend: ## Start React frontend Vite dev server

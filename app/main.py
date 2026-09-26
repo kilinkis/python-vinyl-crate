@@ -1,17 +1,11 @@
 import logging
 import time
-from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.db.base import Base
-from app.db.session import engine
-
-# Ensure all ORM models are registered with Base metadata before table creation
-from app.models import Record, User  # noqa: F401
 
 # Structured logging configuration
 logging.basicConfig(
@@ -22,30 +16,11 @@ logging.basicConfig(
 logger = logging.getLogger("vinyl_crate.api")
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """
-    Application lifespan context manager.
-    Handles startup schema initialization and graceful shutdown tasks.
-    """
-    # Startup: ensure tables exist and demo seed data is populated
-    Base.metadata.create_all(bind=engine)
-    from app.db.init_db import init_db
-    from app.db.session import SessionLocal
-
-    with SessionLocal() as db:
-        init_db(db)
-
-    logger.info("Database tables and seed data initialized successfully.")
-    yield
-
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
-    lifespan=lifespan,
     description="""
     🎵 **Vinyl Crate API** — Production-ready API for managing vinyl record inventories.
 

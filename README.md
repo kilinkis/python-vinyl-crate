@@ -158,9 +158,24 @@ uv pip install -e ".[dev]"
 # (Optional) Add your AI provider key in .env:
 # OPENAI_API_KEY=sk-...
 
+# Create or update the schema, then seed the portfolio demo crate
+alembic upgrade head
+python -m app.db.init_db
+
 # Start backend server
 uvicorn main:app --reload
 ```
+
+`make dev` runs the migration and demo seed steps before starting the server. Direct
+`uvicorn` launches expect those steps to have run first.
+
+If an older database was created by app startup before Alembic was used, it may
+contain `users` and `records` without an `alembic_version` row. Verify that its
+schema matches the initial revision in
+`alembic/versions/347bfea9232d_create_users_and_records_tables.py` before
+running `alembic stamp 347bfea9232d`; then run `alembic upgrade head`. Stamping
+records a revision without applying its schema changes, so it must not be used
+for a database with a different schema.
 
 #### 2. Frontend Setup (React + Vite):
 In a separate terminal:
