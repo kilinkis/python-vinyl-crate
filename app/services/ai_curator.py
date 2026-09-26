@@ -1,14 +1,16 @@
 import logging
-from typing import List, Optional
+from typing import List
 
 from pydantic_ai import Agent
-from pydantic_ai.models.test import TestModel
+from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.crud import record as crud_record
 from app.models.record import Record
 from app.schemas.recommendation import AlbumRecommendation, RecommendationResponse
 
 logger = logging.getLogger("vinyl_crate.ai")
+MAX_RECORDS_ANALYZED = 200
 
 # System prompt for the audiophile vinyl curator agent
 CURATOR_SYSTEM_PROMPT = """
@@ -29,15 +31,9 @@ Guidelines:
 
 
 def _get_curator_agent() -> Agent[None, RecommendationResponse]:
-    """
-    Factory function to initialize the pydantic-ai Agent.
-    Uses TestModel if no API keys are present in the environment to avoid startup crashes.
-    """
-    has_api_key = bool(settings.OPENAI_API_KEY or settings.ANTHROPIC_API_KEY)
-    model: Optional[str | TestModel] = settings.AI_MODEL if has_api_key else TestModel()
-
+    """Create the configured agent only when a provider key is available."""
     return Agent(
-        model=model,
+        model=settings.AI_MODEL,
         output_type=RecommendationResponse,
         system_prompt=CURATOR_SYSTEM_PROMPT,
     )
@@ -101,11 +97,12 @@ def _get_fallback_recommendations(records: List[Record]) -> RecommendationRespon
     )
 
 
-async def get_crate_recommendations(records: List[Record]) -> RecommendationResponse:
+async def recommend_for_collector(db: Session, user_id: int) -> RecommendationResponse:
     """
-    Asynchronously invokes the pydantic-ai agent to analyze records and return structured recommendations.
-    Falls back gracefully if LLM provider keys are not configured.
+    Recommend albums from a collector's most recent records, using the offline
+    selection when no provider is configured or the provider fails.
     """
+    records, _ = crud_record.get_records(db, user_id=user_id, limit=MAX_RECORDS_ANALYZED)
     has_api_key = bool(settings.OPENAI_API_KEY or settings.ANTHROPIC_API_KEY)
 
     if not has_api_key:
