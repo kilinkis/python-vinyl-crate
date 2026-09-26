@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_active_user
-from app.crud import record as crud_record
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.recommendation import RecommendationResponse
@@ -21,12 +20,5 @@ async def get_recommendations(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> RecommendationResponse:
-    """
-    Fetches all records in the user's crate and runs the pydantic-ai curator agent.
-    """
-    # Fetch user's collection (up to 200 items for rich context)
-    records, _ = crud_record.get_records(db, user_id=current_user.id, limit=200)
-
-    # Invoke AI curator
-    recommendations = await ai_curator.get_crate_recommendations(records)
-    return recommendations
+    """Recommend albums for the authenticated collector's crate."""
+    return await ai_curator.recommend_for_collector(db, current_user.id)
